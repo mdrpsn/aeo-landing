@@ -673,6 +673,10 @@
                 action="https://formsubmit.co/founder@aeosuite.io"
                 method="POST"
               >
+                <input type="hidden" name="_subject" value="New Early Access Signup - AEO Suite">
+                <input type="hidden" name="_next" value="https://aeosuite.io/?submitted=true">
+                <input type="hidden" name="_captcha" value="false">
+
                 <!-- Disable captcha -->
                 <input type="hidden" name="_captcha" value="false" />
                 <!-- Email subject -->
@@ -688,12 +692,13 @@
                   value="https://aeosuite.io/?submitted=true"
                 />
 
-                <input
-                  type="email"
+                <input 
+                  type="email" 
                   name="email"
-                  placeholder="you@company.com"
+                  placeholder="you@aeosuite.io"
                   required
-                />
+                >
+
                 <button type="submit" class="btn-primary">
                   <span>Get early access</span>
                   <span class="arrow">↗</span>
