@@ -2,535 +2,805 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>AEO Studio – Metadata & Prompt Engine for AI App Discovery</title>
+  <title>AEO Suite – Metadata & Prompt Engine for AI Discovery</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="AEO Studio helps your AI apps get discovered by generating metadata, capabilities, triggers, and Golden Prompts for AI Engine Optimization." />
+  <meta
+    name="description"
+    content="AEO Suite helps your AI apps get discovered inside AI answers, not just the app store – with metadata, capabilities, triggers, and Golden Prompt Sets."
+  />
+
   <style>
     :root {
-      --bg: #05060a;
-      --bg-alt: #0b0d12;
-      --card: #10131b;
-      --accent: #4f8cff;
-      --accent-soft: rgba(79,140,255,0.15);
-      --accent-strong: #6ea0ff;
-      --text: #e6e9f5;
-      --muted: #9ea4b8;
-      --border: #222735;
-      --radius-lg: 18px;
-      --radius-md: 12px;
+      --bg: #050814;
+      --bg-elevated: #0b0f1f;
+      --bg-elevated-soft: #101428;
+      --accent: #6d5dfc;
+      --accent-soft: rgba(109, 93, 252, 0.16);
+      --accent-strong: #8f7bff;
+      --text-main: #f5f5ff;
+      --text-muted: #a5a7c7;
+      --border-subtle: #1d2338;
+      --chip-bg: #151a30;
+      --danger: #ff4b81;
+      --radius-lg: 14px;
+      --radius-md: 10px;
+      --radius-sm: 6px;
+      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.75);
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
     }
-    * { box-sizing: border-box; }
-    body {
+
+    * {
+      box-sizing: border-box;
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #151828 0, #05060a 52%);
-      color: var(--text);
+      padding: 0;
     }
-    .page {
-      min-height: 100vh;
+
+    html,
+    body {
+      height: 100%;
+      background: radial-gradient(circle at top, #151a3a 0, #050814 52%);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 18px;
+      width: 100%;
+      max-width: 1320px;
+      min-height: calc(100vh - 32px);
+      background: linear-gradient(145deg, #050814 0, #050814 45%, #070a18 100%);
+      border-radius: 24px;
+      border: 1px solid rgba(117, 130, 220, 0.16);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Sidebar */
+
+    .sidebar {
+      padding: 18px 18px 18px 18px;
+      border-right: 1px solid rgba(255, 255, 255, 0.04);
+      background: radial-gradient(circle at top left, #1c1f3a 0, #050814 55%);
       display: flex;
       flex-direction: column;
+      gap: 20px;
     }
-    .nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 24px;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-    }
-    .nav-left {
+
+    .brand-row {
       display: flex;
       align-items: center;
       gap: 10px;
     }
-    .logo-circle {
-      width: 26px;
-      height: 26px;
+
+    .brand-avatar {
+      width: 32px;
+      height: 32px;
       border-radius: 999px;
-      background: conic-gradient(from 190deg, #4f8cff, #9b6bff, #4f8cff);
-      display: flex;
+      background: radial-gradient(circle at 30% 0, #ffffff 0, #90a0ff 35%, #4b2aff 100%);
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
-      font-weight: 600;
-      color: #02030a;
+      font-weight: 700;
+      font-size: 17px;
+      color: #080816;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
     }
-    .brand-text-main {
-      font-size: 16px;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-    }
-    .brand-text-sub {
-      font-size: 11px;
-      color: var(--muted);
-    }
-    .nav-right {
+
+    .brand-text {
       display: flex;
-      gap: 12px;
-      font-size: 13px;
-      color: var(--muted);
-      align-items: center;
+      flex-direction: column;
+      gap: 2px;
     }
-    .pill {
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.08);
-      padding: 5px 10px;
+
+    .brand-title {
+      font-size: 16px;
+      letter-spacing: 0.04em;
+      font-weight: 650;
+    }
+
+    .brand-subtitle {
       font-size: 11px;
+      color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.12em;
     }
 
-    .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      padding: 32px 24px 40px;
-      max-width: 1080px;
-      margin: 0 auto;
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.1fr);
-      gap: 32px;
-      align-items: center;
-    }
-
-    .eyebrow {
+    .mode-pill {
+      align-self: flex-start;
+      padding: 5px 10px;
       font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
-
-    h1 {
-      font-size: 32px;
-      letter-spacing: -0.04em;
-      margin: 0 0 12px;
-    }
-
-    .hero-sub {
-      font-size: 14px;
-      color: var(--muted);
-      max-width: 440px;
-      margin-bottom: 16px;
-    }
-
-    .hero-list {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 18px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-    .hero-list li {
-      margin-bottom: 4px;
-    }
-
-    .hero-cta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent), #8c6dff);
       border-radius: 999px;
-      padding: 10px 18px;
-      border: none;
-      color: white;
-      font-size: 14px;
-      cursor: pointer;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--accent-strong);
       display: inline-flex;
       align-items: center;
       gap: 6px;
     }
 
-    .btn-primary:active {
-      transform: translateY(1px);
-      filter: brightness(0.96);
-    }
-
-    .hero-note {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .email-form {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
-      align-items: center;
-    }
-
-    .email-input {
-      padding: 8px 10px;
+    .mode-dot {
+      width: 7px;
+      height: 7px;
       border-radius: 999px;
-      border: 1px solid var(--border);
-      background: #05060b;
-      color: var(--text);
-      font-size: 13px;
-      min-width: 220px;
-    }
-    .email-input::placeholder {
-      color: #5f667b;
+      background: #33ff99;
+      box-shadow: 0 0 0 4px rgba(51, 255, 153, 0.18);
     }
 
-    .btn-secondary {
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.16);
-      padding: 8px 12px;
-      background: rgba(255,255,255,0.03);
-      color: var(--muted);
-      font-size: 12px;
-      cursor: pointer;
-    }
-
-    .mock {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 16px;
-      box-shadow: 0 14px 60px rgba(0,0,0,0.5);
-    }
-
-    .mock-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .mock-tag {
-      border-radius: 999px;
-      padding: 3px 8px;
-      background: rgba(255,255,255,0.02);
-      border: 1px solid rgba(255,255,255,0.06);
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-    }
-
-    .mock-body {
-      background: #05060b;
-      border-radius: var(--radius-md);
-      border: 1px solid #1c2130;
-      padding: 10px;
-      font-family: "SF Mono", Menlo, Monaco, Consolas, monospace;
+    .sidebar-section-title {
       font-size: 11px;
-      color: #e3e6f5;
-      max-height: 220px;
-      overflow: hidden;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
     }
 
-    .section {
-      margin-top: 40px;
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
-      gap: 24px;
-    }
-
-    .section h2 {
-      font-size: 18px;
-      margin: 0 0 10px;
-    }
-
-    .section p {
-      font-size: 13px;
-      color: var(--muted);
-      margin: 0 0 10px;
-    }
-
-    .list {
-      padding-left: 18px;
-      margin: 6px 0 0;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .card-list {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 8px;
-    }
-
-    .small-card {
-      background: rgba(9, 11, 18, 0.9);
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border);
-      padding: 10px 11px;
-      font-size: 12px;
-    }
-
-    .small-card-title {
-      font-weight: 500;
+    .nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
       margin-bottom: 4px;
     }
 
-    .small-card-body {
-      color: var(--muted);
-      font-size: 12px;
+    .nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 10px;
+      border-radius: 9px;
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      font-size: 13px;
+      cursor: default;
+      transition: background 0.15s ease, color 0.15s ease, border 0.15s ease;
     }
 
-    .roadmap-tag {
-      display: inline-flex;
+    .nav-item.active {
+      background: radial-gradient(circle at top left, #3731ff 0, #6d5dfc 32%, #141531 100%);
+      border-color: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      box-shadow: 0 10px 28px rgba(27, 25, 90, 0.65);
+    }
+
+    .nav-item-label {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .nav-item-title {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .nav-item-note {
+      font-size: 11px;
+      color: rgba(190, 192, 230, 0.88);
+    }
+
+    .nav-item-tag {
+      font-size: 10px;
+      padding: 3px 6px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.1);
-      padding: 3px 8px;
-      font-size: 11px;
-      margin-bottom: 6px;
-      color: var(--muted);
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
     }
 
-    .footer {
-      border-top: 1px solid rgba(255,255,255,0.04);
-      padding: 12px 24px 16px;
+    .nav-item.soon {
+      border: 1px dashed rgba(255, 255, 255, 0.08);
+      background: rgba(8, 12, 32, 0.9);
+      color: rgba(165, 167, 199, 0.88);
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
       font-size: 11px;
-      color: var(--muted);
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .lane-pill {
+      display: inline-flex;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(7, 8, 18, 0.9);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(175, 177, 215, 0.94);
+      gap: 6px;
+      align-items: center;
+    }
+
+    .lane-pill span {
+      color: var(--accent-strong);
+      font-weight: 600;
+    }
+
+    .tiny {
+      font-size: 10px;
+      color: rgba(157, 160, 205, 0.9);
+    }
+
+    /* Main */
+
+    .main {
+      padding: 22px 26px 22px 4px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .main-inner {
+      border-radius: 18px;
+      background: radial-gradient(circle at top left, #222753 0, #0b0f1f 38%, #050814 100%);
+      border: 1px solid rgba(113, 122, 244, 0.24);
+      min-height: 100%;
+      padding: 24px 26px 26px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .main-inner::before {
+      content: "";
+      position: absolute;
+      inset: -20%;
+      background:
+        radial-gradient(circle at 0 0, rgba(164, 130, 255, 0.16) 0, transparent 55%),
+        radial-gradient(circle at 100% 0, rgba(66, 186, 255, 0.12) 0, transparent 55%);
+      pointer-events: none;
+      opacity: 0.85;
+    }
+
+    .main-content {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.05fr);
+      gap: 30px;
+      align-items: flex-start;
+    }
+
+    .pill-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      color: var(--accent-strong);
+      margin-bottom: 14px;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .pill-row span {
+      background: rgba(4, 6, 20, 0.7);
+      border-radius: 999px;
+      padding: 5px 9px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .pill-row span.faint {
+      color: var(--text-muted);
+    }
+
+    .hero-title {
+      font-size: 32px;
+      line-height: 1.18;
+      font-weight: 700;
+      margin-bottom: 12px;
+      max-width: 540px;
+    }
+
+    .hero-kicker {
+      font-size: 13px;
+      color: var(--text-muted);
+      max-width: 500px;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .hero-bullets {
+      list-style: none;
+      font-size: 13px;
+      color: rgba(211, 213, 247, 0.95);
+      margin-bottom: 18px;
+    }
+
+    .hero-bullets li {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      margin-bottom: 6px;
+    }
+
+    .hero-bullets li::before {
+      content: "•";
+      color: var(--accent-strong);
+      margin-top: 1px;
+    }
+
+    .hero-signup {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .hero-signup .email-form {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .hero-signup input[type="email"] {
+      padding: 9px 12px;
+      min-width: 240px;
+      max-width: 100%;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(2, 5, 22, 0.92);
+      color: var(--text-main);
+      font-size: 13px;
+      outline: none;
+    }
+
+    .hero-signup input[type="email"]::placeholder {
+      color: rgba(148, 150, 191, 0.9);
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: #ffffff;
+      background: linear-gradient(135deg, #5d47ff 0, #8b7bff 40%, #ff6bba 100%);
+      box-shadow: 0 14px 30px rgba(70, 62, 194, 0.75);
+      white-space: nowrap;
+    }
+
+    .btn-primary span.arrow {
+      font-size: 14px;
+      transform: translateY(1px);
+    }
+
+    .hero-note {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .hero-note strong {
+      color: var(--accent-strong);
+      font-weight: 600;
+    }
+
+    .section {
+      margin-top: 30px;
+    }
+
+    .section-title-row {
       display: flex;
       justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
     }
 
-    @media (max-width: 880px) {
-      .hero {
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .section-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      border-radius: var(--radius-md);
+      background: radial-gradient(circle at top, #181d3a 0, #0b0f1f 52%, #060816 100%);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 12px 13px 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .card h3 {
+      font-size: 13px;
+      margin-bottom: 6px;
+      color: rgba(233, 234, 255, 0.98);
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .chip {
+      font-size: 11px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: rgba(7, 9, 26, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: rgba(196, 198, 237, 0.96);
+    }
+
+    /* Right column */
+
+    .mock-panel {
+      border-radius: var(--radius-lg);
+      background: radial-gradient(circle at top, #1a2043 0, #0b0f1f 60%, #050814 100%);
+      border: 1px solid rgba(178, 187, 255, 0.2);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9);
+      padding: 14px 14px 16px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .mock-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      font-size: 11px;
+    }
+
+    .mock-tab {
+      padding: 6px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(7, 10, 28, 0.9);
+      color: rgba(159, 163, 211, 0.95);
+    }
+
+    .mock-tab.active {
+      background: rgba(109, 93, 252, 0.16);
+      color: #ffffff;
+      border-color: rgba(173, 180, 255, 0.9);
+    }
+
+    .mock-tagline {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .mock-code {
+      border-radius: 10px;
+      background: #050815;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 10px 12px;
+      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono",
+        "Courier New", monospace;
+      font-size: 11px;
+      color: #e9ecff;
+      max-height: 260px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .mock-code pre {
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    .mock-code::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 40px;
+      background: linear-gradient(to bottom, transparent, rgba(5, 8, 21, 0.96));
+    }
+
+    .mock-footer {
+      margin-top: 10px;
+      font-size: 11px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--text-muted);
+    }
+
+    .mock-footer span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .mock-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #33ff99;
+    }
+
+    /* Responsive */
+
+    @media (max-width: 960px) {
+      .shell {
         grid-template-columns: minmax(0, 1fr);
       }
-      .section {
+      .sidebar {
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .main {
+        padding: 14px;
+      }
+      .main-inner {
+        padding: 18px 16px 20px;
+      }
+      .main-content {
         grid-template-columns: minmax(0, 1fr);
+      }
+      .hero-title {
+        font-size: 26px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 8px;
+      }
+      .shell {
+        border-radius: 18px;
+      }
+      .main-inner {
+        border-radius: 16px;
       }
     }
   </style>
 </head>
+
 <body>
-  <div class="page">
-
-    <header class="nav">
-      <div class="nav-left">
-        <div class="logo-circle">A</div>
-        <div>
-          <div class="brand-text-main">AEO Studio</div>
-          <div class="brand-text-sub">Metadata & Prompt Engine for AI Discovery</div>
+  <div class="shell">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand-row">
+        <div class="brand-avatar">A</div>
+        <div class="brand-text">
+          <div class="brand-title">AEO Suite</div>
+          <div class="brand-subtitle">Metadata &amp; Prompt Engine</div>
         </div>
       </div>
-      <div class="nav-right">
-        <div class="pill">AEO Lane · 90 Days</div>
-      </div>
-    </header>
 
+      <div class="mode-pill">
+        <span class="mode-dot"></span>
+        Execution mode · 90 days locked
+      </div>
+
+      <div>
+        <div class="sidebar-section-title">Workspace</div>
+        <div class="nav-list">
+          <div class="nav-item active">
+            <div class="nav-item-label">
+              <div class="nav-item-title">Metadata Generator</div>
+              <div class="nav-item-note">Tool #1 · Live now</div>
+            </div>
+            <div class="nav-item-tag">Spec → Metadata</div>
+          </div>
+
+          <div class="nav-item soon">
+            <div class="nav-item-label">
+              <div class="nav-item-title">Prompt Coverage</div>
+              <div class="nav-item-note">Scan how AIs describe your space</div>
+            </div>
+            <div class="nav-item-tag">Soon</div>
+          </div>
+
+          <div class="nav-item soon">
+            <div class="nav-item-label">
+              <div class="nav-item-title">Competitor Overlap</div>
+              <div class="nav-item-note">Compare metadata against peers</div>
+            </div>
+            <div class="nav-item-tag">Soon</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="lane-pill">
+          AEO Lane · <span>90 days</span>
+        </div>
+        <div class="tiny">
+          Micro-SaaS stack in progress.  
+          Tool #1 ships first. Tools #2 and #3 follow based on real usage.
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
     <main class="main">
-      <!-- HERO -->
-      <section class="hero">
-        <div>
-          <div class="eyebrow">AI Engine Optimization · Micro-SaaS</div>
-          <h1>Make your AI apps show up inside the answers, not just the app store.</h1>
-          <p class="hero-sub">
-            AEO Studio generates the metadata, capabilities, trigger phrases, and Golden Prompts that help AI engines
-            like ChatGPT route users to your tools when they actually need them.
-          </p>
+      <div class="main-inner">
+        <div class="main-content">
+          <!-- LEFT COLUMN -->
+          <section>
+            <div class="pill-row">
+              <span>AI Engine Optimization</span>
+              <span class="faint">Micro-SaaS</span>
+            </div>
 
-          <ul class="hero-list">
-            <li>• AEO-optimized app descriptions and tool capabilities</li>
-            <li>• Trigger phrases tuned to “paste → evaluate → improve” behavior</li>
-            <li>• Golden Prompt Sets you can use across GPT Apps, MCP tools, and docs</li>
-          </ul>
+            <h1 class="hero-title">
+              Make your AI apps show up inside the answers, not just the app store.
+            </h1>
 
-          <div class="hero-cta-row">
-            <button class="btn-primary" onclick="document.getElementById('email').focus()">
-              Get early access
-              <span>⮞</span>
-            </button>
-            <span style="font-size:12px; color:var(--muted);">Early adopters get grandfathered pricing.</span>
-          </div>
+            <p class="hero-kicker">
+              AEO Suite generates the metadata, capabilities, trigger phrases, and Golden Prompts that help
+              AI engines like ChatGPT route users to your tools when they actually need them.
+            </p>
 
-          <form action="https://formsubmit.co/founder@aeosuite.io" method="POST" class="email-form">
-    <!-- Disable captcha -->
-    <input type="hidden" name="_captcha" value="false">
+            <ul class="hero-bullets">
+              <li>AEO-optimized app descriptions and tool capabilities.</li>
+              <li>Trigger phrases tuned to real “paste → evaluate → improve” behavior.</li>
+              <li>Golden Prompt Sets you can reuse across GPT Apps, MCP tools, and docs.</li>
+            </ul>
 
-    <!-- Email input -->
-    <input 
-        type="email" 
-        name="email" 
-        placeholder="you@company.com" 
-        required
-    >
+            <div class="hero-signup">
+              <form
+                class="email-form"
+                action="https://formsubmit.co/founder@aeosuite.io"
+                method="POST"
+              >
+                <!-- Disable captcha -->
+                <input type="hidden" name="_captcha" value="false" />
+                <!-- Email subject -->
+                <input
+                  type="hidden"
+                  name="_subject"
+                  value="New Early Access Signup - AEO Suite"
+                />
+                <!-- Redirect after submit -->
+                <input
+                  type="hidden"
+                  name="_next"
+                  value="https://aeosuite.io/?submitted=true"
+                />
 
-    <!-- Email subject -->
-    <input 
-        type="hidden" 
-        name="_subject" 
-        value="New Early Access Signup - AEO Suite"
-    >
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="you@company.com"
+                  required
+                />
+                <button type="submit" class="btn-primary">
+                  <span>Get early access</span>
+                  <span class="arrow">↗</span>
+                </button>
+              </form>
+            </div>
+            <p class="hero-note" id="email-status">
+              <strong>Early adopters</strong> get grandfathered pricing and direct feedback loops on future tools.
+            </p>
 
-    <!-- Redirect after submit -->
-    <input 
-        type="hidden" 
-        name="_next" 
-        value="https://aeosuite.io/?submitted=true"
-    >
+            <!-- WHAT IT GIVES YOU -->
+            <section class="section">
+              <div class="section-title-row">
+                <h2 class="section-title">What AEO Suite unlocks right now</h2>
+                <p class="section-subtitle">
+                  Start with Tool #1 today. Prompt Coverage and Competitor Overlap follow next.
+                </p>
+              </div>
 
-    <!-- Button -->
-    <button type="submit" class="cta-button">
-        Get early access →
-    </button>
-        </form>
+              <div class="section-grid">
+                <article class="card">
+                  <h3>Tool #1 · AEO Studio</h3>
+                  <p>
+                    Turn app specs into AI-readable metadata in seconds. Feed in your app name, function, users, and problems
+                    solved – get back descriptions, capabilities JSON, trigger phrases, and Golden Prompts.
+                  </p>
+                  <div class="chip-row">
+                    <span class="chip">Metadata JSON</span>
+                    <span class="chip">Capabilities</span>
+                    <span class="chip">Trigger phrases</span>
+                  </div>
+                </article>
 
-          <div class="hero-note" id="email-status"></div>
-        </div>
+                <article class="card">
+                  <h3>Paste → Evaluate aware</h3>
+                  <p>
+                    Designed around real user behavior: they paste content (profiles, ads, docs) and ask “is this good?” or “fix
+                    this.” AEO Studio tunes metadata to that pattern instead of generic keywords.
+                  </p>
+                  <div class="chip-row">
+                    <span class="chip">Real prompts</span>
+                    <span class="chip">AEO > SEO</span>
+                  </div>
+                </article>
 
-        <!-- RIGHT: MOCK -->
-        <div class="mock">
-          <div class="mock-header">
-            <div>Live Now: Tool #1 · Metadata Generator</div>
-            <div class="mock-tag">Spec → Metadata</div>
-          </div>
-<pre class="mock-body">
-{
+                <article class="card">
+                  <h3>Built for builders &amp; agencies</h3>
+                  <p>
+                    Whether you're shipping GPT Apps, MCP tools, or internal agents, you can generate metadata for entire
+                    portfolios in one place – without learning a new framework every month.
+                  </p>
+                  <div class="chip-row">
+                    <span class="chip">App runners</span>
+                    <span class="chip">Dev + marketing</span>
+                  </div>
+                </article>
+              </div>
+            </section>
+          </section>
+
+          <!-- RIGHT COLUMN -->
+          <aside>
+            <div class="mock-panel">
+              <div class="mock-tabs">
+                <div class="mock-tab active">Description</div>
+                <div class="mock-tab">Capabilities</div>
+                <div class="mock-tab">Triggers</div>
+                <div class="mock-tab">Golden Prompts</div>
+              </div>
+              <div class="mock-tagline">
+                Live preview · Tool #1: AEO Studio – Metadata Generator
+              </div>
+              <div class="mock-code">
+<pre>{
   "appName": "Profile Audit Pro",
-  "appDescription": "Profile Audit Pro helps freelancers and operators audit and improve their LinkedIn and freelance profiles. When users paste their profile or bio and ask for an audit, rewrite, clarity improvements, or better positioning, this tool evaluates the content and generates higher-converting, professional versions.",
+  "appDescription": "Profile Audit Pro helps freelancers and 
+  operators turn messy LinkedIn profiles into sharp, 
+  conversion-focused assets in minutes.",
   "toolCapabilities": [
     {
       "name": "audit_profile_content",
-      "description": "When the user pastes a LinkedIn or freelancer profile and asks to evaluate, audit, or improve it, analyze the content for clarity, positioning, and professionalism, then return a structured audit with specific recommendations."
+      "description": "When the user pastes a LinkedIn or 
+      portfolio profile, review clarity, proof, and positioning."
     },
     {
       "name": "rewrite_profile_sections",
-      "description": "When the user requests a rewrite or improvement of their headline, About section, or bio, generate sharper, more compelling versions tailored to their ideal clients."
+      "description": "When the user requests a rewrite for 
+      headline, About, or Experience."
     }
   ],
   "triggerPhrases": [
     "audit my LinkedIn profile",
-    "improve this profile",
-    "evaluate this bio",
-    "rewrite my about section",
-    "fix this headline",
-    "is this a good profile?",
-    "make this profile more professional",
-    "make this sound more credible"
+    "is this a strong headline?",
+    "improve this profile for clients",
+    "make this sound more operator-level"
   ]
-}
-</pre>
-        </div>
-      </section>
-
-      <!-- SECTION: Problem / What AEO Studio Does -->
-      <section class="section">
-        <div>
-          <h2>AI is the new search engine. Most apps will never be discovered.</h2>
-          <p>
-            Users don’t browse app stores anymore. They paste content into ChatGPT and say “evaluate this” or
-            “fix this for me.” The engine decides which tools to call based on metadata, capabilities, and context.
-          </p>
-          <p>
-            If your metadata is weak, unclear, or generic, your app simply never gets surfaced. No traffic, no usage,
-            no revenue — even if your product is great.
-          </p>
-          <p><strong>AEO Studio solves the routing layer.</strong></p>
-          <ul class="list">
-            <li>Turn app specs into AI-readable metadata in seconds</li>
-            <li>Generate trigger phrases aligned with real user behavior</li>
-            <li>Ship Golden Prompt Sets for each tool you launch</li>
-          </ul>
-        </div>
-
-        <div>
-          <h2>What AEO Studio gives you right now</h2>
-          <div class="card-list">
-            <div class="small-card">
-              <div class="small-card-title">Tool #1: Metadata Generator</div>
-              <div class="small-card-body">
-                Feed in your app name, function, user, and problems solved. Get back AEO-optimized descriptions,
-                capabilities JSON, trigger phrases, and Golden Prompts.
+}</pre>
+              </div>
+              <div class="mock-footer">
+                <span><span class="mock-dot"></span> Golden Prompt Sets are tuned for real “paste → evaluate → improve” flows.</span>
+                <span>JSON output is ready for GPT Apps, MCP tools, and docs.</span>
               </div>
             </div>
-            <div class="small-card">
-              <div class="small-card-title">Paste → Evaluate aware</div>
-              <div class="small-card-body">
-                Designed around real behavior: users pasting content (profiles, ads, docs) and asking “is this good?”.
-                Your metadata is tuned to that pattern.
-              </div>
-            </div>
-            <div class="small-card">
-              <div class="small-card-title">Built for builders & agencies</div>
-              <div class="small-card-body">
-                Whether you're shipping GPT Apps, MCP tools, or internal agents, you can generate metadata for entire
-                portfolios in a fraction of the time.
-              </div>
-            </div>
-            <div class="small-card">
-              <div class="small-card-title">No theory, just outputs</div>
-              <div class="small-card-body">
-                This isn’t a $15K “AEO strategy deck.” It’s a working engine that generates the actual text your
-                stack needs to get surfaced in AI answers.
-              </div>
-            </div>
-          </div>
+          </aside>
         </div>
-      </section>
-
-      <!-- Roadmap / Coming Soon -->
-      <section class="section" style="margin-top:30px;">
-        <div>
-          <span class="roadmap-tag">Roadmap · Coming Soon</span>
-          <h2>From one tool to a full AEO suite.</h2>
-          <p>
-            AEO Studio starts with metadata, but the goal is bigger: a full stack for understanding and improving how
-            AI engines see and route to your tools.
-          </p>
-          <ul class="list">
-            <li><strong>Prompt Coverage Scanner</strong> – See which user prompts your app already “wins” and where you’re invisible.</li>
-            <li><strong>Competitor Overlap Map</strong> – Understand whose metadata overlaps yours and where you can own uncontested territory.</li>
-          </ul>
-          <p style="margin-top:8px;">
-            Early adopters will get first access to these tools and locked-in pricing for the entire suite.
-          </p>
-        </div>
-
-        <div>
-          <h2>Who AEO Studio is for</h2>
-          <p>
-            If any of this sounds like you, you’re early enough to benefit:
-          </p>
-          <ul class="list">
-            <li>SaaS founders shipping AI-powered products</li>
-            <li>Indie hackers building GPT Apps and MCP tools</li>
-            <li>Agencies offering AEO / AI visibility services</li>
-            <li>Product teams who want control over AI routing</li>
-          </ul>
-          <p style="margin-top:8px;">
-            If you know AI engines will control discovery, AEO Studio is built for you.
-          </p>
-        </div>
-      </section>
+      </div>
     </main>
-
-    <footer class="footer">
-      <div>© <span id="year"></span> AEO Studio. All rights reserved.</div>
-      <div>Built for the AEO era · Micro-SaaS, no fluff.</div>
-    </footer>
   </div>
-
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-
-    function handleSubmit(e) {
-      e.preventDefault();
-      const emailInput = document.getElementById("email");
-      const status = document.getElementById("email-status");
-      const email = emailInput.value.trim();
-      if (!email) return;
-      // For now, just show a confirmation. Later, wire to a real email service or backend.
-      status.textContent = "Got it. You’re on the early access list.";
-      emailInput.value = "";
-    }
-  </script>
 </body>
 </html>
