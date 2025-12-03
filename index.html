@@ -351,10 +351,38 @@
             <span style="font-size:12px; color:var(--muted);">Early adopters get grandfathered pricing.</span>
           </div>
 
-          <form class="email-form" onsubmit="handleSubmit(event)">
-            <input id="email" type="email" required class="email-input" placeholder="you@company.com" />
-            <button type="submit" class="btn-secondary">Join the waitlist</button>
-          </form>
+          <form action="https://formsubmit.co/founder@aeosuite.io" method="POST" class="email-form">
+    <!-- Disable captcha -->
+    <input type="hidden" name="_captcha" value="false">
+
+    <!-- Email input -->
+    <input 
+        type="email" 
+        name="email" 
+        placeholder="you@company.com" 
+        required
+    >
+
+    <!-- Email subject -->
+    <input 
+        type="hidden" 
+        name="_subject" 
+        value="New Early Access Signup - AEO Suite"
+    >
+
+    <!-- Redirect after submit -->
+    <input 
+        type="hidden" 
+        name="_next" 
+        value="https://aeosuite.io/?submitted=true"
+    >
+
+    <!-- Button -->
+    <button type="submit" class="cta-button">
+        Get early access →
+    </button>
+        </form>
+
           <div class="hero-note" id="email-status"></div>
         </div>
 
