@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AEO Studio – Metadata & Prompt Engine for AI App Discovery</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="AEO Studio helps your AI apps get discovered by generating metadata, capabilities, triggers, and Golden Prompts for AI Engine Optimization." />
+  <style>
+    :root {
+      --bg: #05060a;
+      --bg-alt: #0b0d12;
+      --card: #10131b;
+      --accent: #4f8cff;
+      --accent-soft: rgba(79,140,255,0.15);
+      --accent-strong: #6ea0ff;
+      --text: #e6e9f5;
+      --muted: #9ea4b8;
+      --border: #222735;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #151828 0, #05060a 52%);
+      color: var(--text);
+    }
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-circle {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: conic-gradient(from 190deg, #4f8cff, #9b6bff, #4f8cff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: #02030a;
+    }
+    .brand-text-main {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+    .brand-text-sub {
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .nav-right {
+      display: flex;
+      gap: 12px;
+      font-size: 13px;
+      color: var(--muted);
+      align-items: center;
+    }
+    .pill {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 5px 10px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 32px 24px 40px;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.1fr);
+      gap: 32px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 32px;
+      letter-spacing: -0.04em;
+      margin: 0 0 12px;
+    }
+
+    .hero-sub {
+      font-size: 14px;
+      color: var(--muted);
+      max-width: 440px;
+      margin-bottom: 16px;
+    }
+
+    .hero-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 18px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .hero-list li {
+      margin-bottom: 4px;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #8c6dff);
+      border-radius: 999px;
+      padding: 10px 18px;
+      border: none;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px);
+      filter: brightness(0.96);
+    }
+
+    .hero-note {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .email-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+      align-items: center;
+    }
+
+    .email-input {
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #05060b;
+      color: var(--text);
+      font-size: 13px;
+      min-width: 220px;
+    }
+    .email-input::placeholder {
+      color: #5f667b;
+    }
+
+    .btn-secondary {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.16);
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.03);
+      color: var(--muted);
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .mock {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 16px;
+      box-shadow: 0 14px 60px rgba(0,0,0,0.5);
+    }
+
+    .mock-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .mock-tag {
+      border-radius: 999px;
+      padding: 3px 8px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .mock-body {
+      background: #05060b;
+      border-radius: var(--radius-md);
+      border: 1px solid #1c2130;
+      padding: 10px;
+      font-family: "SF Mono", Menlo, Monaco, Consolas, monospace;
+      font-size: 11px;
+      color: #e3e6f5;
+      max-height: 220px;
+      overflow: hidden;
+    }
+
+    .section {
+      margin-top: 40px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
+      gap: 24px;
+    }
+
+    .section h2 {
+      font-size: 18px;
+      margin: 0 0 10px;
+    }
+
+    .section p {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 0 0 10px;
+    }
+
+    .list {
+      padding-left: 18px;
+      margin: 6px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .card-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .small-card {
+      background: rgba(9, 11, 18, 0.9);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      padding: 10px 11px;
+      font-size: 12px;
+    }
+
+    .small-card-title {
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .small-card-body {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .roadmap-tag {
+      display: inline-flex;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 3px 8px;
+      font-size: 11px;
+      margin-bottom: 6px;
+      color: var(--muted);
+    }
+
+    .footer {
+      border-top: 1px solid rgba(255,255,255,0.04);
+      padding: 12px 24px 16px;
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    @media (max-width: 880px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .section {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <header class="nav">
+      <div class="nav-left">
+        <div class="logo-circle">A</div>
+        <div>
+          <div class="brand-text-main">AEO Studio</div>
+          <div class="brand-text-sub">Metadata & Prompt Engine for AI Discovery</div>
+        </div>
+      </div>
+      <div class="nav-right">
+        <div class="pill">AEO Lane · 90 Days</div>
+      </div>
+    </header>
+
+    <main class="main">
+      <!-- HERO -->
+      <section class="hero">
+        <div>
+          <div class="eyebrow">AI Engine Optimization · Micro-SaaS</div>
+          <h1>Make your AI apps show up inside the answers, not just the app store.</h1>
+          <p class="hero-sub">
+            AEO Studio generates the metadata, capabilities, trigger phrases, and Golden Prompts that help AI engines
+            like ChatGPT route users to your tools when they actually need them.
+          </p>
+
+          <ul class="hero-list">
+            <li>• AEO-optimized app descriptions and tool capabilities</li>
+            <li>• Trigger phrases tuned to “paste → evaluate → improve” behavior</li>
+            <li>• Golden Prompt Sets you can use across GPT Apps, MCP tools, and docs</li>
+          </ul>
+
+          <div class="hero-cta-row">
+            <button class="btn-primary" onclick="document.getElementById('email').focus()">
+              Get early access
+              <span>⮞</span>
+            </button>
+            <span style="font-size:12px; color:var(--muted);">Early adopters get grandfathered pricing.</span>
+          </div>
+
+          <form class="email-form" onsubmit="handleSubmit(event)">
+            <input id="email" type="email" required class="email-input" placeholder="you@company.com" />
+            <button type="submit" class="btn-secondary">Join the waitlist</button>
+          </form>
+          <div class="hero-note" id="email-status"></div>
+        </div>
+
+        <!-- RIGHT: MOCK -->
+        <div class="mock">
+          <div class="mock-header">
+            <div>Live Now: Tool #1 · Metadata Generator</div>
+            <div class="mock-tag">Spec → Metadata</div>
+          </div>
+<pre class="mock-body">
+{
+  "appName": "Profile Audit Pro",
+  "appDescription": "Profile Audit Pro helps freelancers and operators audit and improve their LinkedIn and freelance profiles. When users paste their profile or bio and ask for an audit, rewrite, clarity improvements, or better positioning, this tool evaluates the content and generates higher-converting, professional versions.",
+  "toolCapabilities": [
+    {
+      "name": "audit_profile_content",
+      "description": "When the user pastes a LinkedIn or freelancer profile and asks to evaluate, audit, or improve it, analyze the content for clarity, positioning, and professionalism, then return a structured audit with specific recommendations."
+    },
+    {
+      "name": "rewrite_profile_sections",
+      "description": "When the user requests a rewrite or improvement of their headline, About section, or bio, generate sharper, more compelling versions tailored to their ideal clients."
+    }
+  ],
+  "triggerPhrases": [
+    "audit my LinkedIn profile",
+    "improve this profile",
+    "evaluate this bio",
+    "rewrite my about section",
+    "fix this headline",
+    "is this a good profile?",
+    "make this profile more professional",
+    "make this sound more credible"
+  ]
+}
+</pre>
+        </div>
+      </section>
+
+      <!-- SECTION: Problem / What AEO Studio Does -->
+      <section class="section">
+        <div>
+          <h2>AI is the new search engine. Most apps will never be discovered.</h2>
+          <p>
+            Users don’t browse app stores anymore. They paste content into ChatGPT and say “evaluate this” or
+            “fix this for me.” The engine decides which tools to call based on metadata, capabilities, and context.
+          </p>
+          <p>
+            If your metadata is weak, unclear, or generic, your app simply never gets surfaced. No traffic, no usage,
+            no revenue — even if your product is great.
+          </p>
+          <p><strong>AEO Studio solves the routing layer.</strong></p>
+          <ul class="list">
+            <li>Turn app specs into AI-readable metadata in seconds</li>
+            <li>Generate trigger phrases aligned with real user behavior</li>
+            <li>Ship Golden Prompt Sets for each tool you launch</li>
+          </ul>
+        </div>
+
+        <div>
+          <h2>What AEO Studio gives you right now</h2>
+          <div class="card-list">
+            <div class="small-card">
+              <div class="small-card-title">Tool #1: Metadata Generator</div>
+              <div class="small-card-body">
+                Feed in your app name, function, user, and problems solved. Get back AEO-optimized descriptions,
+                capabilities JSON, trigger phrases, and Golden Prompts.
+              </div>
+            </div>
+            <div class="small-card">
+              <div class="small-card-title">Paste → Evaluate aware</div>
+              <div class="small-card-body">
+                Designed around real behavior: users pasting content (profiles, ads, docs) and asking “is this good?”.
+                Your metadata is tuned to that pattern.
+              </div>
+            </div>
+            <div class="small-card">
+              <div class="small-card-title">Built for builders & agencies</div>
+              <div class="small-card-body">
+                Whether you're shipping GPT Apps, MCP tools, or internal agents, you can generate metadata for entire
+                portfolios in a fraction of the time.
+              </div>
+            </div>
+            <div class="small-card">
+              <div class="small-card-title">No theory, just outputs</div>
+              <div class="small-card-body">
+                This isn’t a $15K “AEO strategy deck.” It’s a working engine that generates the actual text your
+                stack needs to get surfaced in AI answers.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Roadmap / Coming Soon -->
+      <section class="section" style="margin-top:30px;">
+        <div>
+          <span class="roadmap-tag">Roadmap · Coming Soon</span>
+          <h2>From one tool to a full AEO suite.</h2>
+          <p>
+            AEO Studio starts with metadata, but the goal is bigger: a full stack for understanding and improving how
+            AI engines see and route to your tools.
+          </p>
+          <ul class="list">
+            <li><strong>Prompt Coverage Scanner</strong> – See which user prompts your app already “wins” and where you’re invisible.</li>
+            <li><strong>Competitor Overlap Map</strong> – Understand whose metadata overlaps yours and where you can own uncontested territory.</li>
+          </ul>
+          <p style="margin-top:8px;">
+            Early adopters will get first access to these tools and locked-in pricing for the entire suite.
+          </p>
+        </div>
+
+        <div>
+          <h2>Who AEO Studio is for</h2>
+          <p>
+            If any of this sounds like you, you’re early enough to benefit:
+          </p>
+          <ul class="list">
+            <li>SaaS founders shipping AI-powered products</li>
+            <li>Indie hackers building GPT Apps and MCP tools</li>
+            <li>Agencies offering AEO / AI visibility services</li>
+            <li>Product teams who want control over AI routing</li>
+          </ul>
+          <p style="margin-top:8px;">
+            If you know AI engines will control discovery, AEO Studio is built for you.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div>© <span id="year"></span> AEO Studio. All rights reserved.</div>
+      <div>Built for the AEO era · Micro-SaaS, no fluff.</div>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    function handleSubmit(e) {
+      e.preventDefault();
+      const emailInput = document.getElementById("email");
+      const status = document.getElementById("email-status");
+      const email = emailInput.value.trim();
+      if (!email) return;
+      // For now, just show a confirmation. Later, wire to a real email service or backend.
+      status.textContent = "Got it. You’re on the early access list.";
+      emailInput.value = "";
+    }
+  </script>
+</body>
+</html>
